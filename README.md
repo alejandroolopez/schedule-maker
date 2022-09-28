@@ -9,7 +9,9 @@ var M04 = new Clase("Professor4", "M04", "Class 4");
 var M05 = new Clase("Professor3", "M05", "Class 5");
 var M06 = new Clase("Professor5", "M06", "Class 6");
 
-var H = new Horario("horario");
+var schedule_div = "horario";
+
+var H = new Horario(schedule_div);
 H.setMonday([M01, M01, M02, M02, M03, Clase.free()]);
 H.setTuesday([M01, M01, M02, M02, M03, Clase.free()]);
 H.setWednesday([M01, M01, M02, M02, M03, Clase.free()]);
