@@ -19,7 +19,7 @@ class Horario {
         this.#createCSS();
 
         // Create and append top div with week days names
-        var weekDays = `<div id="weekDays">
+        let weekDays = `<div id="weekDays">
             <div class="weekDay">Lunes</div>
             <div class="weekDay">Martes</div>
             <div class="weekDay">Miercoles</div>
@@ -32,14 +32,14 @@ class Horario {
         this.container.innerHTML += "<div id='days'></div>";
 
         // Create and append days divs
-        var ids = ["mon", "tue", "wed", "thu", "fri"];
-        var daysDiv = document.getElementById("days")
-        for (const id of ids) daysDiv.innerHTML += `<div id="${id}" class="day"><div>`;
+        let ids = ["mon", "tue", "wed", "thu", "fri"];
+        let daysDiv = document.getElementById("days")
+        for (const id of ids) daysDiv.innerHTML += `<div id="${id}" class="day"></div>`;
     }
 
     // Create css classes
     #createCSS() {
-        var daysCSS = document.createElement("style");
+        let daysCSS = document.createElement("style");
         daysCSS.type = "text/css";
         daysCSS.innerHTML = `#days {
             height: 100%;
@@ -47,14 +47,14 @@ class Horario {
             display: flex;
         }`;
 
-        var dayCSS = document.createElement("style");
+        let dayCSS = document.createElement("style");
         dayCSS.type = "text/css";
         dayCSS.innerHTML = `.day {
             height: 100%;
             width:${this.width / 5}px;
         }`;
         
-        var asignCSS = document.createElement("style");
+        let asignCSS = document.createElement("style");
         asignCSS.type = "text/css";
         asignCSS.innerHTML = `.asign {
             height: ${this.height / 6 - 120}px;
@@ -62,11 +62,11 @@ class Horario {
             border: 1px #f00 dotted;
         }`;
         
-        var weekDaysCSS = document.createElement("style");
+        let weekDaysCSS = document.createElement("style");
         weekDaysCSS.type = "text/css";
         weekDaysCSS.innerHTML = `#weekDays {display: flex;}`;
         
-        var weekDayCSS = document.createElement("style");
+        let weekDayCSS = document.createElement("style");
         weekDayCSS.type = "text/css";
         weekDayCSS.innerHTML = `.weekDay {
             display: flex;
@@ -74,11 +74,10 @@ class Horario {
             align-items: center;
             height: 60px;
             width: ${this.width / 5}px;
-            font-size: 1.5em;
-            border: 1px green solid;
+            font-size: 1.2em;
         }`;
 
-        var asignaturaCSS = document.createElement("style");
+        let asignaturaCSS = document.createElement("style");
         asignaturaCSS.type = "text/css";
         asignaturaCSS.innerHTML = `.asignatura {
             display: flex;
@@ -86,11 +85,10 @@ class Horario {
             align-items: center;
             height: ${(this.height - 120) / 6}px;
             width: 100%;
-            font-size: 1.5em;
-            border: 1px blue solid;
+            font-size: 1.2em;
         }`;
 
-        var patioCSS = document.createElement("style");
+        let patioCSS = document.createElement("style");
         patioCSS.type = "text/css";
         patioCSS.innerHTML = `.patio {
             display: flex;
@@ -98,16 +96,16 @@ class Horario {
             align-items: center;
             height: 60px;
             width: 100%;
-            font-size: 1.5em;
+            font-size: 1.2em;
         }`;
 
-        var freeCSS = document.createElement("style");
+        let freeCSS = document.createElement("style");
         freeCSS.type = "text/css";
         freeCSS.innerHTML = `.free {
             border: none;
         }`;
         
-        var head = document.getElementsByTagName("head")[0];
+        let head = document.getElementsByTagName("head")[0];
         head.appendChild(daysCSS);
         head.appendChild(dayCSS);
         head.appendChild(asignCSS);
@@ -139,15 +137,14 @@ class Horario {
     }
 
     render() {
-        var days = [this.#monday, this.#tuesday, this.#wednesday, this.#thursday, this.#friday]
-        
-        var d = document.getElementById("days").childNodes;
-        var patioHtml = "<div class='patio'></div>"
-        var html, classe;
+        let days = [this.#monday, this.#tuesday, this.#wednesday, this.#thursday, this.#friday]
+        let d = document.getElementById("days").childNodes;
+        let patioHtml = "<div class='patio'></div>"
+        let html, classe;
 
         for (const [key, day] of Object.entries(days)) {
             for (const [i, asingatura] of Object.entries(day)) {
-                classe = asingatura.codigo == "" ? "asignatura free" : "asignatura";
+                classe = asingatura.codigo == "" ? "asignatura free" : `asignatura j-${asingatura.codigo}`;
                 html = `<div class="${classe}">${asingatura.codigo}</div>`;
                 d[key].innerHTML += html;
                 if (i == 2) d[key].innerHTML += patioHtml;
@@ -157,10 +154,30 @@ class Horario {
 }
 
 class Clase {
-    constructor(tutor, codigo, nombre) {
+    
+    #defaultStyles = {"background":"#d24e01"};
+
+    constructor(tutor, codigo, nombre, styles = this.#defaultStyles) {
+        this.head = document.getElementsByTagName("head")[0];
         this.tutor = tutor;
         this.codigo = codigo;
         this.nombre = nombre;
+        this.styles = styles;
+        this.#createClass();
+    }
+
+    #createClass() {
+        let css = document.createElement("style");
+        css.type = "text/css";
+
+        let styles = "";
+        for (const key of Object.keys(this.styles)) {
+            styles += key + ": " + this.styles[key] + ";";
+        }
+
+        css.innerHTML = `.j-${this.codigo} { ${styles} }`;
+        
+        this.head.appendChild(css);
     }
 
     static free() {
